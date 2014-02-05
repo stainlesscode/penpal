@@ -15,6 +15,22 @@ public class AddressComponent {
     String shortName;
     List<AddressComponentType> types = new ArrayList<AddressComponentType>();
 
+    public AddressComponent() {
+        // default constructor
+    }
+
+    /**
+     * Convenience constructor for creating AddressComponents
+     * @param longName the long name, e.g. (California)
+     * @param shortName the short name, e.g. (CA)
+     * @param firstType the principal type for this component. If more than one exist, add using addToTypes()
+     */
+    public AddressComponent(String longName, String shortName, AddressComponentType firstType) {
+        this.longName = longName;
+        this.shortName = shortName;
+        types.add(firstType);
+    }
+
     public String getLongName() {
         return longName;
     }

@@ -1,8 +1,6 @@
 package com.stainlesscode;
 
-import com.stainlesscode.penpal.Address;
-import com.stainlesscode.penpal.AddressFormat;
-import com.stainlesscode.penpal.InvalidAddressException;
+import com.stainlesscode.penpal.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -18,6 +16,7 @@ import java.util.Locale;
 public class AppTest extends TestCase {
 
     private static org.apache.log4j.Logger log = Logger.getLogger(AppTest.class.getName());
+    Address constructedAddress;
 
     /**
      * Create the test case
@@ -28,16 +27,20 @@ public class AppTest extends TestCase {
         super(testName);
     }
 
+    public void setUp() {
+        constructedAddress = new Address();
+        constructedAddress.addToAddressComponentList(new AddressComponent("1600","1600", AddressComponentType.STREET_ADDRESS));
+        constructedAddress.addToAddressComponentList(new AddressComponent("Amphitheatre Pkwy","Amphitheatre Pkwy", AddressComponentType.ROUTE));
+        constructedAddress.addToAddressComponentList(new AddressComponent("Mountain View","Mountain View", AddressComponentType.LOCALITY));
+        constructedAddress.addToAddressComponentList(new AddressComponent("California","CA", AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_2));
+        constructedAddress.addToAddressComponentList(new AddressComponent("94043","94043", AddressComponentType.POSTAL_CODE));
+    }
+
     /**
      * @return the suite of tests being tested
      */
     public static Test suite() {
         return new TestSuite(AppTest.class);
-    }
-
-    public void testLog4j() {
-        BasicConfigurator.configure();
-        log.debug("OK");
     }
 
     public void testUnsupportedLocale() {
@@ -49,7 +52,6 @@ public class AppTest extends TestCase {
     }
 
     public void testParseAddress() {
-        BasicConfigurator.configure();
         String address = "1600 Amphitheatre Pkwy, Mountain View, CA 94043";
         AddressFormat format = AddressFormat.getInstance(Locale.US);
 
@@ -74,6 +76,15 @@ public class AppTest extends TestCase {
             fail(e.getMessage());
         } catch (ParseException e) {
             e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    public void testPrintAddress() {
+        try {
+            System.out.println(AddressFormat.getInstance(Locale.US).printAddress(constructedAddress));
+        } catch (InvalidAddressException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             fail(e.getMessage());
         }
     }

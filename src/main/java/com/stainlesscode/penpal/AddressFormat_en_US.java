@@ -1,6 +1,6 @@
 package com.stainlesscode.penpal;
 
-import com.stainlesscode.penpal.ext.OpenNLPAddressParserAdapter;
+import com.stainlesscode.penpal.ext.JGeocoderAddressParserAdapter;
 import org.antlr.stringtemplate.StringTemplate;
 import org.apache.log4j.Logger;
 
@@ -17,13 +17,13 @@ import java.util.Locale;
 public class AddressFormat_en_US extends AddressFormat {
     private static org.apache.log4j.Logger log = Logger.getLogger(AddressFormat_en_US.class.getName());
     protected Locale locale = Locale.US;
-    //   private JGeocoderAddressParserAdapter adapter;
-    private OpenNLPAddressParserAdapter adapter;
+    private JGeocoderAddressParserAdapter adapter;
+    //private OpenNLPAddressParserAdapter adapter;
 
     protected AddressFormat_en_US() {
         super();
-        //       this.adapter = new JGeocoderAddressParserAdapter();
-        this.adapter = new OpenNLPAddressParserAdapter();
+        this.adapter = new JGeocoderAddressParserAdapter();
+        //this.adapter = new OpenNLPAddressParserAdapter();
     }
 
     @Override
@@ -39,11 +39,12 @@ public class AddressFormat_en_US extends AddressFormat {
     @Override
     public String printAddress(Address address) throws InvalidAddressException {
         log.debug("entering printAddress(" + address + ")");
-        StringTemplate query = new StringTemplate("$number$ $street$\n$city$ $state$ $zip$");
+        StringTemplate query = new StringTemplate("$number$ $street$\n$city$, $state$ $zip$");
         String number = address.getAddressComponentsOfType(AddressComponentType.STREET_ADDRESS).get(0).getLongName();
         String street = address.getAddressComponentsOfType(AddressComponentType.ROUTE).get(0).getLongName();
         String city = address.getAddressComponentsOfType(AddressComponentType.LOCALITY).get(0).getLongName();
-        String state = address.getAddressComponentsOfType(AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_2).get(0).getLongName();
+        String state = address.getAddressComponentsOfType(AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_2).get(0).getShortName();
+        if (state==null) state = address.getAddressComponentsOfType(AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_2).get(0).getLongName();
         String zip = address.getAddressComponentsOfType(AddressComponentType.POSTAL_CODE).get(0).getLongName();
         query.setAttribute("number", number);
         query.setAttribute("street", street);
