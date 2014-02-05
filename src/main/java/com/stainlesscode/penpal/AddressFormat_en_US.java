@@ -1,8 +1,10 @@
 package com.stainlesscode.penpal;
 
 import com.stainlesscode.penpal.ext.JGeocoderAddressParserAdapter;
+import com.stainlesscode.penpal.ext.OpenNLPAddressParserAdapter;
 
 import java.text.ParseException;
+import java.util.Locale;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,16 +15,19 @@ import java.text.ParseException;
  */
 public class AddressFormat_en_US extends AddressFormat {
 
-    private JGeocoderAddressParserAdapter adapter;
+    protected Locale locale = Locale.US;
+ //   private JGeocoderAddressParserAdapter adapter;
+    private OpenNLPAddressParserAdapter adapter;
 
     protected AddressFormat_en_US() {
         super();
-        this.adapter = new JGeocoderAddressParserAdapter();
+ //       this.adapter = new JGeocoderAddressParserAdapter();
+        this.adapter = new OpenNLPAddressParserAdapter();
     }
 
     @Override
     public void isValid(Address address) throws InvalidAddressException {
-        throw new UnsupportedOperationException("Address validation is not yet supported for this locale (en_US).");
+        throw new UnsupportedOperationException("Address validation is not yet supported for this locale: " + locale);
     }
 
     @Override
