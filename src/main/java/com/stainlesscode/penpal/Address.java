@@ -1,5 +1,7 @@
 package com.stainlesscode.penpal;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -12,8 +14,8 @@ import java.util.Locale;
  * To change this template use File | Settings | File Templates.
  */
 public class Address {
+    private static org.apache.log4j.Logger log = Logger.getLogger(Address.class.getName());
     private List<AddressComponent> addressComponentList = new ArrayList<AddressComponent>();
-    private String formattedAddress;
     private Geometry geometry;
 
     public static Address parseAddress(String formattedAddress, Locale locale) {
@@ -28,14 +30,6 @@ public class Address {
         this.addressComponentList = addressComponentList;
     }
 
-    public String getFormattedAddress() {
-        return formattedAddress;
-    }
-
-    public void setFormattedAddress(String formattedAddress) {
-        this.formattedAddress = formattedAddress;
-    }
-
     public Geometry getGeometry() {
         return geometry;
     }
@@ -46,6 +40,22 @@ public class Address {
 
     public void addToAddressComponentList(AddressComponent component) {
         addressComponentList.add(component);
+    }
+
+    public List<AddressComponent> getAddressComponentsOfType(AddressComponentType type) throws InvalidAddressException {
+        log.debug("entering getAddressComponentsOfType(" + type + ")");
+        List<AddressComponent> result = new ArrayList();
+        for (AddressComponent comp : addressComponentList) {
+            log.debug("traversing comp " + comp);
+            if (comp.getTypes().contains(type)) {
+                result.add(comp);
+            }
+        }
+        if (result.isEmpty()) {
+            log.debug("about to throw InvalidAddressException, no component found for " + type);
+            throw new InvalidAddressException("No address component for type " + type);
+        }
+        return result;
     }
 
     public String toString() {

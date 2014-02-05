@@ -6,6 +6,8 @@ import com.stainlesscode.penpal.InvalidAddressException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import java.text.ParseException;
 import java.util.Locale;
@@ -14,6 +16,9 @@ import java.util.Locale;
  * Unit test for simple App.
  */
 public class AppTest extends TestCase {
+
+    private static org.apache.log4j.Logger log = Logger.getLogger(AppTest.class.getName());
+
     /**
      * Create the test case
      *
@@ -30,6 +35,11 @@ public class AppTest extends TestCase {
         return new TestSuite(AppTest.class);
     }
 
+    public void testLog4j() {
+        BasicConfigurator.configure();
+        log.debug("OK");
+    }
+
     public void testUnsupportedLocale() {
         try {
             AddressFormat.getInstance(Locale.FRANCE);
@@ -39,12 +49,13 @@ public class AppTest extends TestCase {
     }
 
     public void testParseAddress() {
+        BasicConfigurator.configure();
         String address = "1600 Amphitheatre Pkwy, Mountain View, CA 94043";
         AddressFormat format = AddressFormat.getInstance(Locale.US);
 
         try {
             Address parsedAddress = format.parseAddress(address);
-            System.out.println(parsedAddress);
+            System.out.println(format.printAddress(parsedAddress));
         } catch (InvalidAddressException e) {
             e.printStackTrace();
            fail(e.getMessage());
@@ -57,7 +68,7 @@ public class AppTest extends TestCase {
 
         try {
             Address parsedAddress = format.parseAddress(address);
-            System.out.println(parsedAddress);
+            System.out.println(format.printAddress(parsedAddress));
         } catch (InvalidAddressException e) {
             e.printStackTrace();
             fail(e.getMessage());
